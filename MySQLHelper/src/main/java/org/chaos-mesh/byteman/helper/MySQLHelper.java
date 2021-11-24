@@ -19,11 +19,8 @@ import net.sf.jsqlparser.util.TablesNamesFinder;
  */
 public class MySQLHelper extends Helper
 {
-    static int threadNum = 0;
-
     protected MySQLHelper(Rule rule) {
         super(rule);
-        this.threadNum = 0;
     }
 
     public static SQLInfo parseSQL(String sql) {
@@ -96,8 +93,7 @@ public class MySQLHelper extends Helper
             }
         }
 
-        System.out.println("sql: " + sql + "match filter database:" + filterDatabase + " filter table: " + filterTable);
-
+        System.out.println("sql: " + sql + ", match filter database:" + filterDatabase + " filter table: " + filterTable);
         return true;
     } 
 }
