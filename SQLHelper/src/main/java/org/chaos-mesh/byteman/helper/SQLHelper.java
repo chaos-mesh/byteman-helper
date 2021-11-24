@@ -15,11 +15,11 @@ import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 
 /**
- * Helper class used by MySQLHelper script to ...
+ * Helper class used by SQLHelper script to ...
  */
-public class MySQLHelper extends Helper
+public class SQLHelper extends Helper
 {
-    protected MySQLHelper(Rule rule) {
+    protected SQLHelper(Rule rule) {
         super(rule);
     }
 
@@ -80,7 +80,7 @@ public class MySQLHelper extends Helper
     }
 
     public boolean matchDBTable(String sql, String filterDatabase, String filterTable) {
-        SQLInfo sqlInfo = MySQLHelper.parseSQL(sql);
+        SQLInfo sqlInfo = SQLHelper.parseSQL(sql);
         if (filterDatabase != null) {
             if (!sqlInfo.dbList.contains(filterDatabase)) {
                 return false;

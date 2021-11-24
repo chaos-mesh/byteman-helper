@@ -1,8 +1,8 @@
 # byteman-helper
 
-## MySQLHelper
+## SQLHelper
 
-`MySQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), which used to parse SQL and judge whether this SQL match specified database and table.
+`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), which used to parse SQL and judge whether this SQL match specified database and table.
 
 | Type | Method | Description |
 | ---- | ------ | ------------|
@@ -14,7 +14,7 @@
 RULE mysql test
 CLASS com.mysql.cj.jdbc.StatementImpl
 METHOD executeQuery
-HELPER org.chaos_mesh.byteman.helper.MySQLHelper
+HELPER org.chaos_mesh.byteman.helper.SQLHelper
 AT ENTRY
 BIND
      flag:boolean=matchDBTable($1, "test", "t1");
