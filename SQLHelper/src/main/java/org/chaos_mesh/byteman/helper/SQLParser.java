@@ -18,7 +18,7 @@ public class SQLParser {
     public SQLParser(){}
 
     public static SQLInfo parseSQL(String sql) {
-        System.out.println("parseSQL:" + sql);
+        System.out.println("parseSQL: " + sql);
         List<String> dbTableList = new ArrayList();
         List<String> tableList = new ArrayList();
         List<String> dbList = new ArrayList();
@@ -63,12 +63,10 @@ public class SQLParser {
                 tableList.add(dbTable[0]);
             } else {
                 System.out.println("parse database and table failed:" + dbTableList.get(i));
-                System.out.println(dbTable);
             }
         }
 
-        System.out.println(dbList);
-        System.out.println(tableList);
+        System.out.println("database list: " + dbList.toString() + ", table list: " + tableList.toString() + ", sql type: " + type);
 
         return new SQLInfo(dbList, tableList, type);
     }
@@ -88,14 +86,13 @@ public class SQLParser {
             }
         }
 
-        
         if (filterTable != null && filterTable != "") {
             if (!sqlInfo.tableList.contains(filterTable)) {
                 return false;
             }
         }
 
-        System.out.println("sql: " + sql + ", match filter database:" + filterDatabase + " filter table: " + filterTable);
+        System.out.println("sql: " + sql + ", match filter database:" + filterDatabase + ", filter table: " + filterTable + ", sql type:" + sqlType);
         return true;
     }
 }

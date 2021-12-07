@@ -5,7 +5,7 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 /**
- * Unit test for simple App.
+ * Unit test for SQLParser.
  */
 public class SQLParserTest 
     extends TestCase
@@ -78,6 +78,10 @@ public class SQLParserTest
             new SQLParserTestCase("update test.t1 set id = 1", "test", "t1", "select", false),
             new SQLParserTestCase("update test.t1 set id = 1", "test1", "t1", "update", false),
             new SQLParserTestCase("update test.t1 set id = 1", "test", "t2", "update", false),
+
+            // test multiple database and table
+            new SQLParserTestCase("SELECT t1.id, t2.name FROM test1.t1 INNER JOIN test2.t2 ON test1.t1=test2.t2;", "test1", "t1", "select", true),
+            new SQLParserTestCase("SELECT t1.id, t2.name FROM test1.t1 INNER JOIN test2.t2 ON test1.t1=test2.t2;", "test2", "t2", "select", true),
         };
 
         for (int i = 1; i < testCases.length; i++) {
