@@ -14,17 +14,11 @@ import net.sf.jsqlparser.statement.insert.Insert;
 import net.sf.jsqlparser.statement.replace.Replace;
 import net.sf.jsqlparser.util.TablesNamesFinder;
 
-/**
- * Helper class used by SQLHelper script to ...
- */
-public class SQLHelper extends Helper
-{
-    protected SQLHelper(Rule rule) {
-        super(rule);
-    }
+public class SQLParser {
+    public SQLParser(){}
 
     public static SQLInfo parseSQL(String sql) {
-        System.out.println("parseSQL:" + sql);
+        System.out.println("parseSQL: " + sql);
         List<String> dbTableList = new ArrayList();
         List<String> tableList = new ArrayList();
         List<String> dbList = new ArrayList();
@@ -69,32 +63,36 @@ public class SQLHelper extends Helper
                 tableList.add(dbTable[0]);
             } else {
                 System.out.println("parse database and table failed:" + dbTableList.get(i));
-                System.out.println(dbTable);
             }
         }
 
-        System.out.println(dbList);
-        System.out.println(tableList);
+        System.out.println("database list: " + dbList.toString() + ", table list: " + tableList.toString() + ", sql type: " + type);
 
         return new SQLInfo(dbList, tableList, type);
     }
 
-    public boolean matchDBTable(String sql, String filterDatabase, String filterTable) {
-        SQLInfo sqlInfo = SQLHelper.parseSQL(sql);
-        if (filterDatabase != null) {
+    public static boolean matchDBTable(String sql, String filterDatabase, String filterTable, String sqlType) {
+        SQLInfo sqlInfo = SQLParser.parseSQL(sql);
+
+        if (sqlType != null && sqlType != "") {
+            if (sqlInfo.type != sqlType) {
+                return false;
+            }
+        }
+
+        if (filterDatabase != null && filterDatabase != "") {
             if (!sqlInfo.dbList.contains(filterDatabase)) {
                 return false;
             }
         }
 
-        if (filterTable != null) {
+        if (filterTable != null && filterTable != "") {
             if (!sqlInfo.tableList.contains(filterTable)) {
                 return false;
             }
         }
 
-        System.out.println("sql: " + sql + ", match filter database:" + filterDatabase + " filter table: " + filterTable);
+        System.out.println("sql: " + sql + ", match filter database:" + filterDatabase + ", filter table: " + filterTable + ", sql type:" + sqlType);
         return true;
-    } 
+    }
 }
-
