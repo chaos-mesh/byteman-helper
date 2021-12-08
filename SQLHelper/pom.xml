@@ -40,7 +40,12 @@
         <artifactId>maven-shade-plugin</artifactId>
         <version>3.2.4</version>
         <configuration>
-          <!-- put your configurations here -->
+          <relocations>
+            <relocation>
+              <pattern>net.sf.jsqlparser</pattern>
+              <shadedPattern>org.chaosmesh.shaded.net.sf.jsqlparser</shadedPattern>
+            </relocation>
+          </relocations>
         </configuration>
         <executions>
           <execution>
