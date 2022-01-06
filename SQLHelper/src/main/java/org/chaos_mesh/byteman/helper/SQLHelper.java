@@ -19,15 +19,14 @@ import net.sf.jsqlparser.util.TablesNamesFinder;
  */
 public class SQLHelper extends Helper
 {
-    //SQLParser sqlParser;
-
     protected SQLHelper(Rule rule) {
         super(rule);
-        //this.sqlParser = new SQLParser();
     }
 
-    public boolean matchDBTable(String sql, String filterDatabase, String filterTable, String sqlType) {
-        return SQLParser.matchDBTable(sql, filterDatabase, filterTable, sqlType);
+    // matchDBTable returns true if the sql match the filterDatabase, filterTable and sqlType.
+    // sql may not contain database infomation, so the database parameter is required.
+    public boolean matchDBTable(String database, String sql, String filterDatabase, String filterTable, String sqlType) {
+        return SQLParser.matchDBTable(database, sql, filterDatabase, filterTable, sqlType);
     }
 }
 
