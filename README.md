@@ -1,33 +1,27 @@
 # byteman-helper
 
-## SQLHelper
+The repository maintains byteman [helpers](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), plug-ins, scripts, and anything else that extends byteman's functionality.
 
-`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), which used to parse SQL and judge whether this SQL match specified database and table.
+## BytemanHelper
 
-| Type | Method | Description |
-| ---- | ------ | ------------|
-| boolean | matchDBTable(String sql, String filterDatabase, String filterTable) | parse the `sql`, and judge whether this SQL match specified `filterDatabase` and `filterTable` |
+Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers).
 
-### Example
+### SQLHelper
 
-```txt
-RULE mysql test
-CLASS com.mysql.cj.jdbc.StatementImpl
-METHOD executeQuery
-HELPER org.chaos_mesh.byteman.helper.SQLHelper
-AT ENTRY
-BIND
-     flag:boolean=matchDBTable($1, "test", "t1");
-IF flag
-DO
-        throw new java.sql.SQLException("BOOM");
-ENDRULE
-```
+[SQLHelper](./BytemanHelper/SQLHelper) is is used to parse SQL and judge whether this SQL match specified database and table.
 
-SQLs match database `test` and table `t1` will get exception when execute query.
+### GCHelper
 
-### Build
+[GCHelper](./BytemanHelper/GCHelper) is used to trigger garbage collection in JVM.
 
-```bash
-mvn -X package -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
-```
+### StressHelper
+
+[StressHelper](./BytemanHelper/StressHelper) is used to inject CPU or memory stress into JVM.
+
+## AgentInstaller
+
+[AgentInstaller](./AgentInstaller) is used to install agent.
+
+## ChaosAgent
+
+[ChaosAgent](./ChaosAgent) is a agent which can be attach to JVM, it is used to provide the inject trigger point for JVMChaos(byteman).
