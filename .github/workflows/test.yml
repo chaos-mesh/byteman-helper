@@ -19,5 +19,11 @@ jobs:
 
       - name: Test with Maven
         run: |
-          cd SQLHelper
-          mvn test
+          cd BytemanHelper
+          mvn package
+          cd ..
+          cd ChaosAgent
+          mvn package
+          cd ..
+          cd AgentInstaller
+          mvn package
