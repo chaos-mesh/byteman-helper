@@ -51,7 +51,7 @@ jobs:
           cp ./Scripts/bminstall.sh ./byteman-download-${BYTEMAN_VERSION}/bin/
 
           GIT_TAG=latest
-          mv ./byteman-download-${BYTEMAN_VERSION} ./byteman-download-${GIT_TAG}
-          tar czvf ./byteman-download-${GIT_TAG}.tar.gz ./byteman-download-${GIT_TAG}
+          mv ./byteman-download-${BYTEMAN_VERSION} ./byteman-chaos-mesh-download-${GIT_TAG}
+          tar czvf ./byteman-chaos-mesh-download-${GIT_TAG}.tar.gz ./byteman-chaos-mesh-download-${GIT_TAG}
           
-          aws s3 cp ./byteman-download-${GIT_TAG}.tar.gz ${{ secrets.AWS_BUCKET_NAME }}/./byteman-download-${GIT_TAG}.tar.gz
+          aws s3 cp ./byteman-chaos-mesh-download-${GIT_TAG}.tar.gz ${{ secrets.AWS_BUCKET_NAME }}/byteman-chaos-mesh-download-${GIT_TAG}.tar.gz
