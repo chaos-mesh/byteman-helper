@@ -1,8 +1,8 @@
-name: Release latest binary
+name: Release tag binary
 on:
   push:
-    branches:
-      - main
+    tags:
+      - v*
 
 jobs:
   run:
@@ -39,19 +39,18 @@ jobs:
 
       - name: Package and Upload
         run: |
-          BYTEMAN_VERSION=4.0.18
+          BYTEMAN_VERSION=${BYTEMAN_VERSION}
           HELPER_VERSION=0.9
-
           curl -fsSL -o byteman-download-${BYTEMAN_VERSION}-bin.zip https://downloads.jboss.org/byteman/${BYTEMAN_VERSION}/byteman-download-${BYTEMAN_VERSION}-bin.zip
           unzip byteman-download-${BYTEMAN_VERSION}-bin.zip
 
-          cp ./BytemanHelper/target/byteman-helper-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}/lib/byteman-helper.jar
-          cp ./AgentInstaller/target/agent-installer-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}/lib/agent-installer.jar
-          cp ./ChaosAgent/target/chaos-agent-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}/lib/chaos-agent.jar
-          cp ./Scripts/bminstall.sh ./byteman-download-${BYTEMAN_VERSION}/bin/
+          cp ./BytemanHelper/target/byteman-helper-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}-bin/lib/byteman-helper.jar
+          cp ./AgentInstaller/target/agent-installer-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}-bin/lib/agent-installer.jar
+          cp ./ChaosAgent/target/chaos-agent-${HELPER_VERSION}.jar ./byteman-download-${BYTEMAN_VERSION}-bin/lib/chaos-agent.jar
+          cp ./Scripts/bminstall.sh ./byteman-download-${BYTEMAN_VERSION}-bin/bin/
 
-          GIT_TAG=latest
-          mv ./byteman-download-${BYTEMAN_VERSION} ./byteman-chaos-mesh-download-${GIT_TAG}
-          tar czvf ./byteman-chaos-mesh-download-${GIT_TAG}.tar.gz ./byteman-chaos-mesh-download-${GIT_TAG}
+          GIT_TAG=${GITHUB_REF##*/}
+          mv ./byteman-download-${BYTEMAN_VERSION}-bin ./byteman-download-${GIT_TAG}-bin
+          tar czvf ./byteman-download-${GIT_TAG}-bin.tar.gz ./byteman-download-${GIT_TAG}-bin
           
-          aws s3 cp ./byteman-chaos-mesh-download-${GIT_TAG}.tar.gz ${{ secrets.AWS_BUCKET_NAME }}/byteman-chaos-mesh-download-${GIT_TAG}.tar.gz
+          aws s3 cp ./byteman-download-${GIT_TAG}-bin.tar.gz ${{ secrets.AWS_BUCKET_NAME }}/./byteman-download-${GIT_TAG}-bin.tar.gz
