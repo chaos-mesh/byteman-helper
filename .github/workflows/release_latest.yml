@@ -1,4 +1,4 @@
-name: Release tag binary
+name: Release latest binary
 on:
   pull_request:
     branches:
@@ -39,8 +39,9 @@ jobs:
 
       - name: Package and Upload
         run: |
-          BYTEMAN_VERSION=${BYTEMAN_VERSION}
+          BYTEMAN_VERSION=4.0.18
           HELPER_VERSION=0.9
+
           curl -fsSL -o byteman-download-${BYTEMAN_VERSION}-bin.zip https://downloads.jboss.org/byteman/${BYTEMAN_VERSION}/byteman-download-${BYTEMAN_VERSION}-bin.zip
           unzip byteman-download-${BYTEMAN_VERSION}-bin.zip
 
