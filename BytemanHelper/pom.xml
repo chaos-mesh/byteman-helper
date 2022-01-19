@@ -2,10 +2,10 @@
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.chaos_mesh.byteman</groupId>
-  <artifactId>helper</artifactId>
+  <artifactId>byteman-helper</artifactId>
   <packaging>jar</packaging>
-  <version>1.0</version>
-  <name>SQLHelper</name>
+  <version>0.9</version>
+  <name>byteman-helper</name>
   <url>http://maven.apache.org</url>
   <dependencies>
     <dependency>
