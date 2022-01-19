@@ -59,7 +59,7 @@ if [ -z "$BYTEMAN_HOME" ]; then
     fi
 fi
 
-# check that we can find  the byteman jar via BYTEMAN_HOME
+# check that we can find the byteman jar via BYTEMAN_HOME
 
 # the Install class is in the byteman-install jar
 if [ -r "${BYTEMAN_HOME}/lib/byteman.jar" ]; then
@@ -75,13 +75,31 @@ else
     echo "Cannot locate byteman install jar"
     exit
 fi
+
+# chaos agent provides the inject trigger point for inject stress and gc
+if [ -r "${BYTEMAN_HOME}/lib/chaos-agent.jar" ]; then
+    CHAOS_AGENT_JAR="${BYTEMAN_HOME}/lib/chaos-agent.jar"
+else
+    echo "Cannot locate chaos agent jar"
+    exit
+fi
+
+#  agent installer is used to install chaos agent
+if [ -r "${BYTEMAN_HOME}/lib/agent-installer.jar" ]; then
+    AGENT_INSTALLER_JAR="${BYTEMAN_HOME}/lib/agent-installer.jar"
+else
+    echo "Cannot locate agent installer jar"
+    exit
+fi
+
 # for jdk6/7/8 we also need a tools jar from JAVA_HOME
 JAVA_VERSION=$(print_java_version)
 if [ $JAVA_VERSION -le 8 ]; then
   if [ -z "$JAVA_HOME" ]; then
-     echo "please set JAVA_HOME"
-     exit
-  fi
+    echo "please set JAVA_HOME"
+    exit
+fi
+
 # on Linux we need to add the tools jar to the path
 # this is not currently needed on a Mac
   OS=`uname`
@@ -123,3 +141,6 @@ if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ $JAVA_VERSION -le 8 ]
 else
 	java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
 fi
+
+# attach chaos agent
+java -classpath ${AGENT_INSTALLER_JAR} org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
