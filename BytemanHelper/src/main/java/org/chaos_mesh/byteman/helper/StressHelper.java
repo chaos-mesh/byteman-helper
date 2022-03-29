@@ -193,6 +193,7 @@ class MemoryStressThread implements StressRunnable {
     public void run() {
         Helper.verbose("Running thread " +  threadName );
         ArrayList<String> increaseSizeData = new ArrayList<String>();
+        ArrayList<ThreadTask> threadTasks = new ArrayList<ThreadTask>();
         boolean oom = false;
 
         while (true) {
@@ -201,8 +202,10 @@ class MemoryStressThread implements StressRunnable {
             lock.unlock();
             if (exit) {
                 increaseSizeData = null;
-                ThreadTask.setStop(true);
-                System.gc(); 
+                for (int i = 0; i < threadTasks.size(); i++) {
+                    threadTasks.get(i).setStop(true);
+                }
+                System.gc();
                 break;
             }
 
@@ -223,6 +226,7 @@ class MemoryStressThread implements StressRunnable {
                 } else if (this.type.equals("stack")) {
                     try {
                         ThreadTask task = new ThreadTask();
+                        threadTasks.add(task);
                         task.setInterval(9999999);
                         Thread th = new Thread(task);
                         th.start();
@@ -230,7 +234,6 @@ class MemoryStressThread implements StressRunnable {
                         oom = true;
                         Helper.verbose("exception: " + e);
                     }
-
                 }
             }
         }

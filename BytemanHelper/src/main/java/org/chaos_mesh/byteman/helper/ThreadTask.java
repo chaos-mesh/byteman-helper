@@ -16,24 +16,26 @@ package org.chaos_mesh.byteman.helper;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class ThreadTask implements Runnable{
-    public static boolean stop = false;
-    private static ReentrantLock lock = new ReentrantLock();
+    private boolean stop = false;
+    private ReentrantLock lock = new ReentrantLock();
 
     int interval;
     public ThreadTask() {
         
     }
 
-    public static void setStop(boolean stop) {
-        ThreadTask.lock.lock();
-        ThreadTask.stop = stop;
-        ThreadTask.lock.unlock();
+    public void setStop(boolean stop) {
+        this.lock.lock();
+        this.stop = stop;
+        this.lock.unlock();
     }
 
-    public static boolean getStop() {
-        ThreadTask.lock.lock();
-        stop = ThreadTask.stop;
-        ThreadTask.lock.unlock();
+    public boolean getStop() {
+        boolean stop = false;
+
+        this.lock.lock();
+        stop = this.stop;
+        this.lock.unlock();
 
         return stop;
     }
@@ -54,8 +56,8 @@ public class ThreadTask implements Runnable{
                         return;
                     }
                 } catch(Exception e) {
-                    System.out.println("get exception when execute new chaos thread:" + e);
-                }         
+                    System.out.println("chaos thread: " + Thread.currentThread().getName() + " get exception when execute new chaos thread:" + e);
+                }
             }
         }
     }
