@@ -31,7 +31,7 @@ public class ThreadPoolHelper extends Helper
         ThreadPoolHelper.hasException = false;
     }
 
-    public void traceExecute(ThreadPoolExecutor threadPool, int num)
+    public void threadPoolExecute(ThreadPoolExecutor threadPool, int num)
     {
         if (ThreadPoolHelper.hasException)
         {
