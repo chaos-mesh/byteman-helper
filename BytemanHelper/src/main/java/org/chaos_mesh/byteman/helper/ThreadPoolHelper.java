@@ -47,7 +47,7 @@ public class ThreadPoolHelper extends Helper
             ThreadTask task = new ThreadTask();
             threadTasks.add(task);
             task.setInterval(9999999);
-            threadPool.execute(task);  
+            threadPool.execute(task);
         } catch(Exception e) {
             System.out.println("traceExecute get exception when execute new thread:" + e);
             ThreadPoolHelper.hasException = true;
