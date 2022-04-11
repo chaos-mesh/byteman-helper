@@ -74,3 +74,25 @@ DO
     gc();
 ENDRULE
 ```
+
+### ThreadPoolHelper
+
+`ThreadPoolHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), it hijacks the `java.util.concurrent.ThreadPoolExecutor` and uses it to create the specified number of threads, preventing the user from creating threads.
+
+| Type | Method | Description |
+| ---- | ------ | ------------|
+| void | threadPoolExecute(ThreadPoolExecutor threadPool, int num) | Using the `threadPool` to create the specified number of threads. |
+
+#### Example
+
+```txt
+RULE apply thread pool
+CLASS java.util.concurrent.ThreadPoolExecutor
+METHOD execute
+HELPER org.chaos_mesh.byteman.helper.ThreadPoolHelper
+AT ENTRY
+IF true
+DO
+    threadPoolExecute($0, 1000)
+ENDRULE
+```
