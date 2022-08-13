@@ -143,4 +143,4 @@ else
 fi
 
 # attach chaos agent
-java -classpath ${AGENT_INSTALLER_JAR} org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
+java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
