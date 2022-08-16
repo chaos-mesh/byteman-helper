@@ -136,7 +136,6 @@ PID=${*: -1}
 PID_USER="$( ps -o uname= -p "${PID}" )"
 SUDO_PATH=`which sudo`
 
-# if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ $JAVA_VERSION -le 8 ] && [ "$SUDO_PATH" != "" ]; then
 if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ "$SUDO_PATH" != "" ]; then
   sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
   if [ $JAVA_VERSION -le 8 ]; then
