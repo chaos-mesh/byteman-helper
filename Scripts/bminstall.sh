@@ -137,7 +137,6 @@ PID_USER="$( ps -o uname= -p "${PID}" )"
 SUDO_PATH=`which sudo`
 
 if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ "$SUDO_PATH" != "" ]; then
-  sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
   if [ $JAVA_VERSION -le 8 ]; then
     sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
     sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
@@ -149,4 +148,3 @@ else
   java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
   java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
 fi
-
