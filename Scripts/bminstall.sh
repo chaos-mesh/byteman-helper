@@ -136,17 +136,15 @@ PID=${*: -1}
 PID_USER="$( ps -o uname= -p "${PID}" )"
 SUDO_PATH=`which sudo`
 
-# if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ $JAVA_VERSION -le 8 ] && [ "$SUDO_PATH" != "" ]; then
 if [ "$USER" == "root" ] && [ "$PID_USER" != "root" ] && [ "$SUDO_PATH" != "" ]; then
-	if [ $JAVA_VERSIOn -le 8 ]; then
-	  sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
-	  sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
-	else
-	  sudo -u $PID_USER BYTEMAN_HOME=$BYTEMAN_HOME java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
-	  sudo -u $PID_USER BYTEMAN_HOME=$BYTEMAN_HOME java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
-	fi
+  if [ $JAVA_VERSION -le 8 ]; then
+    sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
+    sudo -u $PID_USER JAVA_HOME=$JAVA_HOME BYTEMAN_HOME=$BYTEMAN_HOME $JAVA_HOME/bin/java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
+  else
+    sudo -u $PID_USER BYTEMAN_HOME=$BYTEMAN_HOME java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
+    sudo -u $PID_USER BYTEMAN_HOME=$BYTEMAN_HOME java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
+  fi
 else
-	java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
-	java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
+  java ${BYTEMAN_JAVA_OPTS} -classpath "$CP" org.jboss.byteman.agent.install.Install $*
+  java -classpath "${AGENT_INSTALLER_JAR}:${CP}" org.chaos_mesh.agent_installer.Install -a ${CHAOS_AGENT_JAR} -p ${PID}
 fi
-
