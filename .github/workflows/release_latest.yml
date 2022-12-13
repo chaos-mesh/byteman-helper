@@ -39,8 +39,8 @@ jobs:
 
       - name: Package and Upload
         run: |
-          BYTEMAN_VERSION=4.0.18
-          HELPER_VERSION=0.9
+          BYTEMAN_VERSION=4.0.20
+          HELPER_VERSION=0.12
 
           curl -fsSL -o byteman-download-${BYTEMAN_VERSION}-bin.zip https://downloads.jboss.org/byteman/${BYTEMAN_VERSION}/byteman-download-${BYTEMAN_VERSION}-bin.zip
           unzip byteman-download-${BYTEMAN_VERSION}-bin.zip

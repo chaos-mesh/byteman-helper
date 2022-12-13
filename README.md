@@ -1,10 +1,10 @@
 # byteman-helper
 
-The repository maintains byteman [helpers](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers), plug-ins, scripts, and anything else that extends byteman's functionality.
+The repository maintains byteman [helpers](https://downloads.jboss.org/byteman/4.0.20/byteman-programmers-guide.html#user-defined-rule-helpers), plug-ins, scripts, and anything else that extends byteman's functionality.
 
 ## BytemanHelper
 
-Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.17/byteman-programmers-guide.html#user-defined-rule-helpers).
+Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.20/byteman-programmers-guide.html#user-defined-rule-helpers).
 
 ### SQLHelper
 
