@@ -45,7 +45,7 @@ jobs:
           HELPER_VERSION: 0.12
           VERSION: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
         run: |
-          $BYTEMAN_DIR=byteman-download-${BYTEMAN_VERSION}
+          BYTEMAN_DIR=byteman-download-${BYTEMAN_VERSION}
 
           curl -fsSLO https://downloads.jboss.org/byteman/${BYTEMAN_VERSION}/${BYTEMAN_DIR}-bin.zip
           unzip ${BYTEMAN_DIR}-bin.zip
