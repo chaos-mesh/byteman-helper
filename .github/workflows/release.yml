@@ -41,7 +41,7 @@ jobs:
 
       - name: Package and Upload
         env:
-          BYTEMAN_VERSION: 4.0.22
+          BYTEMAN_VERSION: 4.0.24
           HELPER_VERSION: 0.12
           VERSION: ${{ github.ref_name == 'main' && 'latest' || github.ref_name }}
         run: |

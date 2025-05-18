@@ -1,10 +1,10 @@
 ## BytemanHelper
 
-Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers).
+Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers).
 
 ### StressHelper
 
-`StressHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to inject CPU or memory stress into JVM.
+`StressHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to inject CPU or memory stress into JVM.
 
 | Type | Method | Description |
 | ---- | ------ | ------------|
@@ -27,7 +27,7 @@ ENDRULE
 
 ### SQLHelper
 
-`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to parse SQL and judge whether this SQL match specified database and table.
+`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to parse SQL and judge whether this SQL match specified database and table.
 
 | Type | Method | Description |
 | ---- | ------ | ------------|
@@ -59,7 +59,7 @@ mvn -X package -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmav
 
 ### GCHelper
 
-`GCHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers), which used to trigger garbage collection in JVM.
+`GCHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which used to trigger garbage collection in JVM.
 
 #### Example
 
@@ -77,7 +77,7 @@ ENDRULE
 
 ### ThreadPoolHelper
 
-`ThreadPoolHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers), it hijacks the `java.util.concurrent.ThreadPoolExecutor` and uses it to create the specified number of threads, preventing the user from creating threads.
+`ThreadPoolHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), it hijacks the `java.util.concurrent.ThreadPoolExecutor` and uses it to create the specified number of threads, preventing the user from creating threads.
 
 | Type | Method | Description |
 | ---- | ------ | ------------|
