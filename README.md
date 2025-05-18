@@ -1,6 +1,6 @@
 # byteman-helper
 
-The repository maintains byteman [helpers](https://downloads.jboss.org/byteman/4.0.22/byteman-programmers-guide.html#user-defined-rule-helpers), plug-ins, scripts,
+The repository maintains byteman [helpers](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), plug-ins, scripts,
 and anything else that extends byteman's functionality, which are used for Chaos Mesh.
 
 ## BytemanHelper

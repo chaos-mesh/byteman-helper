@@ -22,7 +22,7 @@
     <dependency>
       <groupId>org.jboss.byteman</groupId>
       <artifactId>byteman</artifactId>
-      <version>4.0.22</version>
+      <version>4.0.24</version>
     </dependency>
   </dependencies>
   <properties>
