@@ -1,17 +1,17 @@
-## BytemanHelper
+# BytemanHelper
 
-Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers).
+Some [Byteman's User-Defined Rule Helpers](https://downloads.jboss.org/byteman/4.0.27/byteman-programmers-guide.html#user-defined-rule-helpers).
 
-### StressHelper
+## StressHelper
 
-`StressHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to inject CPU or memory stress into JVM.
+`StressHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.27/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to inject CPU or memory stress into JVM.
 
-| Type | Method | Description |
-| ---- | ------ | ------------|
-| void | injectCPUStress(String name, int cpuCount) | Inject CPU stress into the JVM. The `name` must be unique in one Java process, the `cpuCount` is the number of CPUs that `StressHelper` used. |
+| Type | Method                                       | Description                                                                                                                                                                  |
+| ---- | -------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| void | injectCPUStress(String name, int cpuCount)   | Inject CPU stress into the JVM. The `name` must be unique in one Java process, the `cpuCount` is the number of CPUs that `StressHelper` used.                                |
 | void | injectMemStress(String name, String memType) | Inject Memory stress into the JVM until out of memory. The `name` must be unique in one Java process, the `memType` is the memory type, its value can be "heap" and "stack". |
 
-#### Example
+### Example
 
 ```txt
 RULE cpu test
@@ -25,12 +25,12 @@ DO
 ENDRULE
 ```
 
-### SQLHelper
+## SQLHelper
 
-`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to parse SQL and judge whether this SQL match specified database and table.
+`SQLHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.27/byteman-programmers-guide.html#user-defined-rule-helpers), which is used to parse SQL and judge whether this SQL match specified database and table.
 
-| Type | Method | Description |
-| ---- | ------ | ------------|
+| Type    | Method                                                              | Description                                                                                    |
+| ------- | ------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
 | boolean | matchDBTable(String sql, String filterDatabase, String filterTable) | parse the `sql`, and judge whether this SQL match specified `filterDatabase` and `filterTable` |
 
 #### Example
@@ -51,17 +51,17 @@ ENDRULE
 
 SQLs match database `test` and table `t1` will get an exception when executing the query.
 
-#### Build
+### Build
 
 ```bash
 mvn -X package -Dmaven.test.skip=true -Dmaven.wagon.http.ssl.insecure=true -Dmaven.wagon.http.ssl.allowall=true
 ```
 
-### GCHelper
+## GCHelper
 
-`GCHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), which used to trigger garbage collection in JVM.
+`GCHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.27/byteman-programmers-guide.html#user-defined-rule-helpers), which used to trigger garbage collection in JVM.
 
-#### Example
+### Example
 
 ```txt
 RULE gc test
@@ -75,15 +75,15 @@ DO
 ENDRULE
 ```
 
-### ThreadPoolHelper
+## ThreadPoolHelper
 
-`ThreadPoolHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.24/byteman-programmers-guide.html#user-defined-rule-helpers), it hijacks the `java.util.concurrent.ThreadPoolExecutor` and uses it to create the specified number of threads, preventing the user from creating threads.
+`ThreadPoolHelper` is a [Byteman's User-Defined Rule Helper](https://downloads.jboss.org/byteman/4.0.27/byteman-programmers-guide.html#user-defined-rule-helpers), it hijacks the `java.util.concurrent.ThreadPoolExecutor` and uses it to create the specified number of threads, preventing the user from creating threads.
 
-| Type | Method | Description |
-| ---- | ------ | ------------|
+| Type | Method                                                    | Description                                                       |
+| ---- | --------------------------------------------------------- | ----------------------------------------------------------------- |
 | void | threadPoolExecute(ThreadPoolExecutor threadPool, int num) | Using the `threadPool` to create the specified number of threads. |
 
-#### Example
+### Example
 
 ```txt
 RULE apply thread pool
