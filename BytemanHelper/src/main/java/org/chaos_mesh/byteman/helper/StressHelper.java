@@ -16,19 +16,13 @@ import java.util.*;
 
 import org.jboss.byteman.rule.Rule;
 import org.jboss.byteman.rule.helper.Helper;
-import org.jboss.byteman.rule.Action;
 
-import java.nio.ByteBuffer;
-import java.io.StringWriter;
-import java.lang.reflect.Method;
 import java.util.concurrent.locks.ReentrantLock;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class StressHelper extends Helper
 {
-    static HashMap<String, Stress> stresses = new HashMap<String, Stress>();
+    static HashMap<String, Stress> stresses = new HashMap<>();
 
     protected StressHelper(Rule rule) {
         super(rule);
@@ -37,6 +31,11 @@ public class StressHelper extends Helper
     public static void uninstalled(Rule rule)
     {
         Stress stress = stresses.get(rule.getName());
+        if (stress == null)
+        {
+            Helper.verbose("Stress reference not found for rule " + rule.getName() + ". All keys: " + stresses.keySet());
+            return;
+        }
         stress.quit();
         stresses.remove(rule.getName());
     }
@@ -66,6 +65,20 @@ public class StressHelper extends Helper
         stresses.put(name, stress);
         stress.load();
     }
+
+  public void injectLimitedMemStress(String name, String memType, String heapMemoryUsage)
+  {
+      Stress stress = stresses.get(name);
+      if (stress != null)
+      {
+        return;
+      }
+
+      stress = new MemoryStress(name, memType, heapMemoryUsage);
+      stresses.put(name, stress);
+      stress.load();
+  }
+
 }
 
 /*
@@ -87,7 +100,7 @@ class CPUStress implements Stress {
     CPUStress(String name, int cpuCount) {
         this.name = name;
         this.cpuCount = cpuCount;
-        threads = new ArrayList<CPUStressThread>();
+        threads = new ArrayList<>();
     }
 
     public void load() {
@@ -108,16 +121,57 @@ class CPUStress implements Stress {
 class MemoryStress implements Stress {
     private String name;
     private String type;
+    private String heapStressPercentage;
     private MemoryStressThread thread;
 
     MemoryStress(String name, String type) {
+        this(name, type, null);
+    }
+
+    MemoryStress(String name, String type, String heapStressPercentage) {
         this.name = name;
         this.type = type;
+        this.heapStressPercentage = heapStressPercentage;
     }
 
     public void load() {
-        thread = new MemoryStressThread(name, type);
+        Long heapMemoryToBeUsedUp = getMaxHeapUsageRequested();
+        thread = new MemoryStressThread(name, type, heapMemoryToBeUsedUp);
         thread.start();
+    }
+
+    private Long getMaxHeapUsageRequested() {
+        if (heapStressPercentage == null) {
+          return null;
+        }
+
+        Double heapStressPercentageDouble = null;
+        Long heapMemoryToBeUsedUp = null;
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        if (heapStressPercentage.endsWith("%")) {
+            heapStressPercentageDouble = Double.parseDouble(heapStressPercentage.substring(0, heapStressPercentage.length() - 1));
+        } else if (heapStressPercentage.toLowerCase().endsWith("mb") || heapStressPercentage.toLowerCase().endsWith("gb")) {
+            String unit = heapStressPercentage.substring(heapStressPercentage.length() - 2).toLowerCase();
+            double value = Double.parseDouble(heapStressPercentage.substring(0, heapStressPercentage.length() - 2));
+            if (unit.equals("mb")) {
+                heapMemoryToBeUsedUp = (long)(value * 1024 * 1024);
+            } else if (unit.equals("gb")) {
+                heapMemoryToBeUsedUp = (long)(value * 1024 * 1024 * 1024);
+            }
+        } else if (heapStressPercentage.contains(".")) {
+            try {
+                heapStressPercentageDouble = Double.parseDouble(heapStressPercentage);
+            } catch (NumberFormatException e) {
+                Helper.verbose("Failed to parse heapStressPercentage: " + heapStressPercentage);
+            }
+        } else {
+            Helper.verbose("Failed to parse heapStressPercentage: " + heapStressPercentage + ". Some examples that should work: 50%, 100MB, 1GB, 0.5");
+        }
+        if (heapMemoryToBeUsedUp == null && heapStressPercentageDouble != null) {
+            heapMemoryToBeUsedUp = (long)(maxMemory * heapStressPercentageDouble);
+        }
+
+        return heapMemoryToBeUsedUp;
     }
 
     public void quit() {
@@ -126,29 +180,27 @@ class MemoryStress implements Stress {
 }
 
 interface StressRunnable extends Runnable {
-
-    public void shutdown();
 }
 
 class CPUStressThread implements StressRunnable {
     private Thread t;
     private String threadName;
     private boolean flag;
-   
+
     private ReentrantLock lock = new ReentrantLock();
-    
+
     CPUStressThread( String name ) {
         threadName = name;
         flag = true;
         Helper.verbose("Creating thread " +  threadName );
     }
-   
+
     public void run() {
         Helper.verbose("Running thread " +  threadName );
-        
+
         while (true) {
             lock.lock();
-            boolean exit = !flag; 
+            boolean exit = !flag;
             lock.unlock();
             if (exit) {
                 break;
@@ -157,10 +209,10 @@ class CPUStressThread implements StressRunnable {
 
         Helper.verbose("Exiting thread " +  threadName );
     }
-   
+
     public void start() {
         Helper.verbose("Starting thread " +  threadName );
-    
+
         if (t == null) {
             t = new Thread (this, threadName);
             t.start ();
@@ -180,27 +232,38 @@ class MemoryStressThread implements StressRunnable {
     private String threadName;
     private boolean flag;
     private String type;
+    private Long heapMemoryToBeUsedUp;
 
     private ReentrantLock lock = new ReentrantLock();
 
-    MemoryStressThread(String name, String type) {
+    MemoryStressThread(String name, String type, Long heapMemoryToBeUsedUp) {
         threadName = name;
         this.type = type;
+        this.heapMemoryToBeUsedUp = heapMemoryToBeUsedUp;
         flag = true;
-        Helper.verbose("Creating thread " +  threadName + ", type " + type);
+        Helper.verbose("Creating thread " +  threadName + ", type " + type + ", heapMemoryToBeUsedUp " + heapMemoryToBeUsedUp + ", maxHeapSize " + Runtime.getRuntime().maxMemory());
+    }
+
+    MemoryStressThread(String name, String type) {
+        this(name, type, null);
     }
 
     public void run() {
         Helper.verbose("Running thread " +  threadName );
-        ArrayList<String> increaseSizeData = new ArrayList<String>();
-        ArrayList<ThreadTask> threadTasks = new ArrayList<ThreadTask>();
+        List<String> increaseSizeData = new LinkedList<>();
+        ArrayList<ThreadTask> threadTasks = new ArrayList<>();
         boolean oom = false;
 
+        logMemoryStats();
+        long iteration = 0;
+        long logIntervalIteration = 100000;
         while (true) {
+            iteration++;
             lock.lock();
             boolean exit = !flag;
             lock.unlock();
             if (exit) {
+                Helper.verbose("stop memory stress thread, exit condition reached");
                 increaseSizeData = null;
                 for (int i = 0; i < threadTasks.size(); i++) {
                     threadTasks.get(i).setStop(true);
@@ -210,6 +273,7 @@ class MemoryStressThread implements StressRunnable {
             }
 
             if (oom) {
+                Helper.verbose("oom condition reached, pause a little - 500ms");
                 try {
                     Thread.sleep(500);
                 } catch (Exception e) {
@@ -217,11 +281,22 @@ class MemoryStressThread implements StressRunnable {
                 }
             } else {
                 if (this.type.equals("heap")) {
-                    try {
-                        increaseSizeData.add("123456");
-                    } catch (OutOfMemoryError e) {
-                        oom = true;
-                        Helper.verbose("exception: " + e);
+                    if (shouldAddMoreHeapMemoryLoad(heapMemoryToBeUsedUp)) {
+                        logMemoryStatsIfIntervalReached(iteration, logIntervalIteration);
+                        try {
+                          increaseSizeData.add("123456");
+                        } catch (OutOfMemoryError e) {
+                          oom = true;
+                          Helper.verbose("exception: " + e);
+                        }
+                    } else {
+                        Helper.verbose("heap memory fill condition reached, pause a little - 5000ms");
+                        logMemoryStats();
+                        try {
+                          Thread.sleep(5000);
+                        } catch (Exception e) {
+                          Helper.verbose("exception: " + e);
+                        }
                     }
                 } else if (this.type.equals("stack")) {
                     try {
@@ -240,10 +315,34 @@ class MemoryStressThread implements StressRunnable {
 
         Helper.verbose("Exiting thread " +  threadName );
     }
-   
-    public void start () {
+
+  private void logMemoryStats() {
+      logMemoryStatsIfIntervalReached(1, 1);
+  }
+
+  private void logMemoryStatsIfIntervalReached(long iteration, long logIntervalIteration) {
+      if (iteration % logIntervalIteration == 0) {
+          long maxHeapSize = Runtime.getRuntime().maxMemory();
+          long freeHeapSize = Runtime.getRuntime().freeMemory();
+          long totalHeapSize = Runtime.getRuntime().totalMemory();
+          Helper.verbose("heap memory stats: maxHeapSize " + maxHeapSize + ", freeHeapSize " + freeHeapSize + ", totalHeapSize " + totalHeapSize + ", heapMemoryToBeUsedUp " + heapMemoryToBeUsedUp + "; iteration " + iteration);
+      }
+  }
+
+  boolean shouldAddMoreHeapMemoryLoad(Long heapMemoryToBeUsedUp) {
+    if (heapMemoryToBeUsedUp == null || heapMemoryToBeUsedUp < 0) {
+        return true;
+    }
+
+    long currentHeapSize = Runtime.getRuntime().totalMemory();
+    long freeHeapSize = Runtime.getRuntime().freeMemory();
+
+    return heapMemoryToBeUsedUp > (currentHeapSize - freeHeapSize);
+  }
+
+  public void start () {
         Helper.verbose("Starting thread " +  threadName );
-    
+
         if (t == null) {
             t = new Thread (this, threadName);
             t.start ();
